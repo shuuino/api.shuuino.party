@@ -1,0 +1,14 @@
+name = "api-shuuino-party"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+
+[assets]
+directory = "./public"
+
+[[kv_namespaces]]
+binding = "POLL_KV"
+id = "ba2cd127810d48a385049402fb342e31"
+
+[[kv_namespaces]]
+binding = "SUGGEST_KV"
+id = "33a070454b34486ca13b48ee747038f2"
