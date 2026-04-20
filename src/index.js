@@ -1,10 +1,11 @@
 import { handlePoll }    from './poll.js';
 import { handleSuggest } from './suggest.js';
 
+const ALLOWED = ['https://shuuino.party', 'https://preview.shuuino.party'];
+
 function corsHeaders(req) {
   const origin = req.headers.get('Origin') || '';
-  const allowed = (origin === 'https://shuuino.party' || origin.endsWith('.shuuino.party'))
-    ? origin : 'https://shuuino.party';
+  const allowed = ALLOWED.includes(origin) ? origin : ALLOWED[0];
   return {
     'Access-Control-Allow-Origin':  allowed,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
