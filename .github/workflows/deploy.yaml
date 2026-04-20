@@ -12,7 +12,6 @@ jobs:
       - name: Deploy Worker
         run: |
           npm install -g wrangler
-          echo "$DISCORD_WEBHOOK_URL" | npx wrangler secret put DISCORD_WEBHOOK_URL
           npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
