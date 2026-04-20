@@ -2,7 +2,7 @@ import { handlePoll }    from './poll.js';
 import { handleSuggest } from './suggest.js';
 
 const CORS = {
-  'Access-Control-Allow-Origin':  '*',
+  'Access-Control-Allow-Origin':  ['https://shuuino.party', 'https://preview.shuuino.party'],
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
