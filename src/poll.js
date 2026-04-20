@@ -1,8 +1,8 @@
 const POLL_OPTIONS = [
-  { id: 'audio-visualizer', label: 'real audio visualizer for music card' },
+  { id: 'Nintendo DS compatibility', label: 'this needs no explanation' },
   { id: 'guestbook',        label: 'guestbook / visitor comments' },
   { id: 'repost-search',    label: 'search / filter through reposts' },
-  { id: 'now-playing-api',  label: 'last.fm / spotify now playing' },
+  { id: 'accessibility settings',  label: 'change font, font size, disable effects, etc' },
   { id: 'theme-toggle',     label: 'light mode toggle' },
 ];
 
