@@ -1,8 +1,8 @@
 const POLL_OPTIONS = [
-  { id: 'Nintendo DS compatibility', label: 'this needs no explanation' },
+  { id: 'ds-compatibility', label: 'Nintendo DS compatibility' },
   { id: 'guestbook',        label: 'guestbook / visitor comments' },
   { id: 'repost-search',    label: 'search / filter through reposts' },
-  { id: 'accessibility settings',  label: 'change font, font size, disable effects, etc' },
+  { id: 'accessibility-settings',  label: 'change font, font size, disable effects, etc' },
   { id: 'theme-toggle',     label: 'light mode toggle' },
 ];
 
