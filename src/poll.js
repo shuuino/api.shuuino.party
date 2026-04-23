@@ -41,11 +41,13 @@ export async function handlePoll(req, env, CORS) {
 
     const cur = parseInt((await env.POLL_KV.get('vote:' + opt.id)) || '0', 10);
     await env.POLL_KV.put('vote:' + opt.id, String(cur + 1));
-    await fetch(env.POLL_WEBHOOK_URL, {
+    try {
+      await fetch(env.POLL_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: `Poll vote: ${opt.label}` }),
-    });
+  });
+} catch {}
     return Response.json({ options: await getOptions(env.POLL_KV) }, { headers: CORS });
   }
 
