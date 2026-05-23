@@ -1,4 +1,4 @@
-name = "api-shuuino-party"
+name = "dev-api-shuuino-party"
 main = "src/index.js"
 compatibility_date = "2024-09-23"
 
