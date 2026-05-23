@@ -15,10 +15,7 @@ id = "33a070454b34486ca13b48ee747038f2"
 
 [[kv_namespaces]]
 binding = "GUESTBOOK_KV"
-id = "your-guestbook-kv-id"
-
-[vars]
-ADMIN_PASSWORD = "your-admin-password"
+id = "4f1d110b9fd14ceba4d77b020146a472"
 
 [observability]
 enabled = false
