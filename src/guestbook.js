@@ -132,7 +132,7 @@ export async function handleGuestbook(req, env, CORS) {
     }
 
     const reply = {
-      name: 'admin',
+      name: 'Shuuino',
       message: replyMessage,
       createdAt: new Date().toISOString(),
       replyTo: commentId,
