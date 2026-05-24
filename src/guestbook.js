@@ -25,8 +25,21 @@ function createCommentKey() {
   return `comment:${reverseTimestamp.toString().padStart(13, '0')}:${Math.random().toString(36).slice(2, 10)}`;
 }
 
+const RESERVED_ADMIN_NAMES = new Set(['admin', 'shuuino']);
+
+function isReservedAdminName(name) {
+  return RESERVED_ADMIN_NAMES.has(String(name ?? '').trim().toLowerCase());
+}
+
 function verifyAdminPassword(password, adminPassword) {
-  return Boolean(password) && Boolean(adminPassword) && password === adminPassword; //am i retarded?
+  return Boolean(password) && Boolean(adminPassword) && password === adminPassword; //am I retarded?
+}
+
+function verifyAdminAuth(req, body, adminPassword) {
+  const password = String(body.password ?? '').trim();
+  const authHeader = req.headers.get('Authorization') || '';
+  const authToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : authHeader.trim();
+  return verifyAdminPassword(password, adminPassword) || verifyAdminPassword(authToken, adminPassword);
 }
 
 async function sendDiscordWebhook(webhookUrl, content) {
@@ -91,8 +104,15 @@ export async function handleGuestbook(req, env, CORS) {
       return Response.json({ error: 'Missing message' }, { status: 400, headers: CORS });
     }
 
+    const nameAttempt = String(body.name ?? '').trim();
+    const isAdminAuthenticated = verifyAdminAuth(req, body, env.ADMIN_PASSWORD);
+
+    if (isReservedAdminName(nameAttempt) && !isAdminAuthenticated) {
+      return Response.json({ error: 'Unauthorized name' }, { status: 401, headers: CORS });
+    }
+
     const comment = {
-      name: formatName(body.name),
+      name: isReservedAdminName(nameAttempt) && isAdminAuthenticated ? 'Shuuino' : formatName(nameAttempt),
       message,
       createdAt: new Date().toISOString(),
     };
