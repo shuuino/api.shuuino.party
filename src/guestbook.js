@@ -141,7 +141,7 @@ export async function handleGuestbook(req, env, CORS) {
     await env.GUESTBOOK_KV.put(createCommentKey(), JSON.stringify(reply));
 
     const webhookUrl = env.GUESTBOOK_WEBHOOK_URL || env.DISCORD_WEBHOOK_URL;
-    await sendDiscordWebhook(webhookUrl, `Admin reply to guestbook: ${replyMessage}`);
+    await sendDiscordWebhook(webhookUrl, `Your dumbass replied: ${replyMessage}`); //i'm sending this via a webhook to myself what do i care what i put in the message
 
     return Response.json({ success: true, reply }, { headers: CORS });
   }

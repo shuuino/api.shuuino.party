@@ -19,7 +19,7 @@ function formatComment(comment) {
   name.className = 'comment-name';
   name.textContent = comment.name || 'anonymous';
   // Color admin comments differently
-  if (comment.name === 'admin') {
+  if (comment.name === 'Shuuino' || comment.name === 'admin') {
     name.style.color = '#0066cc';
     name.style.fontWeight = '900';
   }
