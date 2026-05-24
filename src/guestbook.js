@@ -4,7 +4,7 @@ send through webhook (because I can),
 and store them.
 Then load the most recent 50 on demand, and if it reaches the top it should request the next 50.*/
 
-const RATE_LIMIT_TTL_SECONDS = 1;
+const RATE_LIMIT_TTL_SECONDS = 60;
 const MAX_REVERSE_TIMESTAMP = 9999999999999n;
 
 async function rateLimit(kv, ip) {
