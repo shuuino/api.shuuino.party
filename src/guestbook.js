@@ -26,7 +26,21 @@ function createCommentKey() {
 }
 
 function verifyAdminPassword(password, adminPassword) {
-  return password === adminPassword;
+  return Boolean(password) && Boolean(adminPassword) && password === adminPassword; //am i retarded?
+}
+
+async function sendDiscordWebhook(webhookUrl, content) {
+  if (!webhookUrl) return;
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
+  } catch {
+    // send message even if webhook fails ig
+  }
 }
 
 async function getComments(kv, cursor) {
@@ -85,17 +99,8 @@ export async function handleGuestbook(req, env, CORS) {
 
     await env.GUESTBOOK_KV.put(createCommentKey(), JSON.stringify(comment));
 
-    if (env.GUESTBOOK_WEBHOOK_URL) {
-      try {
-        await fetch(env.GUESTBOOK_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: `Guestbook comment from ${comment.name}: ${comment.message}` }),
-        });
-      } catch {
-        // Ignore webhook failures; comment is still stored.
-      }
-    }
+    const webhookUrl = env.GUESTBOOK_WEBHOOK_URL || env.DISCORD_WEBHOOK_URL;
+    await sendDiscordWebhook(webhookUrl, `Guestbook comment from ${comment.name}: ${comment.message}`);
 
     return Response.json({ success: true, comment }, { headers: CORS });
   }
@@ -106,18 +111,19 @@ export async function handleGuestbook(req, env, CORS) {
       return Response.json({ error: 'Invalid comment ID' }, { status: 400, headers: CORS });
     }
 
-    // Check Authorization header for admin authentication
-    const authHeader = req.headers.get('Authorization') || '';
-    const expectedAuth = `Bearer ${env.ADMIN_PASSWORD}`;
-    if (authHeader !== expectedAuth) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS });
-    }
-
     let body;
     try {
       body = await req.json();
     } catch {
       body = {};
+    }
+
+    const password = String(body.password ?? '').trim();
+    const authHeader = req.headers.get('Authorization') || '';
+    const authToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : authHeader.trim();
+
+    if (!verifyAdminPassword(password, env.ADMIN_PASSWORD) && !verifyAdminPassword(authToken, env.ADMIN_PASSWORD)) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS });
     }
 
     const replyMessage = String(body.message ?? '').trim();
@@ -134,17 +140,8 @@ export async function handleGuestbook(req, env, CORS) {
 
     await env.GUESTBOOK_KV.put(createCommentKey(), JSON.stringify(reply));
 
-    if (env.GUESTBOOK_WEBHOOK_URL) {
-      try {
-        await fetch(env.GUESTBOOK_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: `Admin reply to guestbook: ${replyMessage}` }),
-        });
-      } catch {
-        // Ignore webhook failures; reply is still stored.
-      }
-    }
+    const webhookUrl = env.GUESTBOOK_WEBHOOK_URL || env.DISCORD_WEBHOOK_URL;
+    await sendDiscordWebhook(webhookUrl, `Admin reply to guestbook: ${replyMessage}`);
 
     return Response.json({ success: true, reply }, { headers: CORS });
   }
