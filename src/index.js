@@ -1,5 +1,6 @@
-import { handlePoll }    from './poll.js';
-import { handleSuggest } from './suggest.js';
+import { handlePoll }      from './poll.js';
+import { handleSuggest }   from './suggest.js';
+import { handleGuestbook } from './guestbook.js';
 
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
@@ -15,7 +16,8 @@ export default {
 
     const res =
       await handlePoll(req, env, CORS) ??
-      await handleSuggest(req, env, CORS);
+      await handleSuggest(req, env, CORS) ??
+      await handleGuestbook(req, env, CORS);
 
     if (res) return res;
     return new Response('Not found', { status: 404 });
