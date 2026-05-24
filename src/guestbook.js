@@ -108,7 +108,7 @@ export async function handleGuestbook(req, env, CORS) {
     const isAdminAuthenticated = verifyAdminAuth(req, body, env.ADMIN_PASSWORD);
 
     if (isReservedAdminName(nameAttempt) && !isAdminAuthenticated) {
-      return Response.json({ error: 'Unauthorized name' }, { status: 401, headers: CORS });
+      return Response.json({ error: 'Lmao did you really think that would work?' }, { status: 401, headers: CORS });
     }
 
     const comment = {
